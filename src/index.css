@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth; /* Enables smooth scrolling for all scroll events */
+}
+
+@layer components {
+  .nav-item {
+    @apply relative font-bold;
+    /* Đặt vị trí tương đối cho phần tử cha */
+  }
+
+  .nav-item:after {
+    @apply absolute transition-all duration-300 ease-in-out;
+    bottom: -0.25rem;
+    left: 50%;
+    height: 0.125rem;
+    width: 0;
+    transform: translateX(-50%);
+    content: "";
+    background-color: rgb(255, 0, 0);
+  }
+
+  .nav-item:hover {
+    cursor: pointer;
+    color: rgb(255, 0, 0);
+  }
+
+  /* Hiệu ứng khi hover */
+  .nav-item:hover:after {
+    width: 100%;
+  }
+}
