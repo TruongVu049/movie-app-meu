@@ -22,19 +22,19 @@ export default {
         scaleUp: {
           "0%": {
             transform: "scale(0)",
-            opacity: "0",
+            opacity: 0,
           },
           "100%": {
             transform: "scale(1)",
-            opacity: "1",
+            opacity: 1,
           },
         },
       },
       animation: {
-        fadeDown: "fadeDown 0.7s ease-in-out 0.3s",
-        fadeDownDelay1: "fadeDown 0.7s ease-in-out 0.6s",
-        fadeDownDelay2: "fadeDown 0.7s ease-in-out 0.9s",
-        scaleUp: "scaleUp 0.7s ease-in-out",
+        fadeDown: "fadeDown 0.7s ease-in-out forwards .2s",
+        fadeDownDelay1: "fadeDown 0.7s ease-in-out forwards .4s",
+        fadeDownDelay2: "fadeDown 0.5s ease-in-out forwards .6s",
+        scaleUp: "scaleUp 0.8s ease-in-out ",
       },
       fontFamily: {
         sans: ["'Space Grotesk'", "sans-serif"], // Thêm font vào đây

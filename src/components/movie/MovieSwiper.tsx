@@ -1,21 +1,12 @@
-import { CategoryType, CollectionType } from "../../types";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
 import MovieCard from "./MovieCard";
-import { useMovies } from "../../hooks/useMovies";
+import { Movie, TV } from "../../types";
 
-export default function MovieSwiper({
-  collectionType,
-  categoryType,
-}: {
-  collectionType: CollectionType;
-  categoryType: CategoryType;
-}) {
-  const res = useMovies(collectionType, categoryType);
-
+export default function MovieSwiper({ data }: { data: Movie[] | TV[] }) {
   return (
     <Swiper
       modules={[Autoplay, Pagination]}
@@ -37,12 +28,12 @@ export default function MovieSwiper({
       }}
       className="breakpoint"
     >
-      {res.data?.results
-        ? res.data?.results.map((movie) => {
+      {data.length
+        ? data.map((movie) => {
             if (!movie.backdrop_path) return null;
             return (
               <SwiperSlide key={movie.id}>
-                <MovieCard movie={movie} />
+                <MovieCard data={movie} />
               </SwiperSlide>
             );
           })

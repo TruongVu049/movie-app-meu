@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-  scroll-behavior: smooth; /* Enables smooth scrolling for all scroll events */
+  scroll-behavior: smooth;
 }
 
 @layer components {

@@ -7,6 +7,7 @@ type ButtonProps = {
   tagName?: "button" | "a";
   type?: "button" | "submit" | "reset";
   href?: string;
+  disable?: boolean;
   size?: ButtonSize;
   variant?: "primary" | "secondary";
   className?: string;
@@ -23,6 +24,7 @@ const Button: React.FC<ButtonProps> = ({
   className,
   children,
   onClick,
+  disable = false,
 }) => {
   const sizeClasses = {
     lg: "py-2 md:px-8 px-4 md:text-2xl text-base ",
@@ -41,6 +43,7 @@ const Button: React.FC<ButtonProps> = ({
       <button
         onClick={onClick}
         type={type}
+        disabled={disable}
         className={`rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-offset-2
           ${sizeClasses[size]}
           ${variantClasses[variant]}
@@ -53,7 +56,7 @@ const Button: React.FC<ButtonProps> = ({
   }
   return (
     <Link
-      to={href}
+      to={href ?? "#"}
       className={`rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-offset-2
       ${sizeClasses[size]}
       ${variantClasses[variant]}

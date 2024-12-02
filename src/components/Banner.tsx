@@ -34,15 +34,16 @@ export default function Banner({
               )}")`,
             }}
           >
+            <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black to-transparent"></div>
             <div className="max-w-screen-2xl w-full relative flex items-center justify-between ">
               <div className="lg:w-3/4 w-full px-4 text-white">
-                <h2 className="lg:text-8xl sm:text-6xl text-4xl font-medium animate-fadeDown">
+                <h2 className="lg:text-8xl sm:text-6xl text-4xl font-medium animate-fadeDown opacity-0 invisible">
                   {movie.title}
                 </h2>
-                <p className="my-12 sm:text-[20px] text-[12px] font-medium animate-fadeDownDelay1">
+                <p className="my-12 sm:text-[20px] text-[12px] font-medium animate-fadeDownDelay1 opacity-0 invisible">
                   {movie.overview}
                 </p>
-                <div className="mr-4 flex items-center animate-fadeDownDelay2">
+                <div className="mr-4 flex items-center animate-fadeDownDelay2 opacity-0 invisible">
                   <Button
                     variant="primary"
                     className="mr-2"
@@ -54,10 +55,11 @@ export default function Banner({
                   <Button variant="secondary">Watch trailer</Button>
                 </div>
               </div>
-              <div className="hidden lg:block w-1/4 px-4">
+              <div className="hidden lg:block w-1/4 px-4 ">
                 <img
                   className="w-96 rounded-3xl animate-scaleUp"
                   src={getImageUrl(movie.poster_path, "small")}
+                  loading="lazy"
                   alt={movie.title}
                 />
               </div>

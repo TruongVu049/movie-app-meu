@@ -1,4 +1,4 @@
-export type DataType = {
+export type Media = {
   adult: boolean;
   backdrop_path?: string;
   genre_ids: number[];
@@ -11,33 +11,26 @@ export type DataType = {
   vote_count: number;
 };
 
-export type MovieType = DataType & {
+export interface Movie extends Media {
   original_title: string;
   release_date: string;
   title: string;
   video: boolean;
-};
+}
 
-export type TvType = DataType & {
+export interface TV extends Media {
   origin_country: string[];
   original_name: string;
   first_air_date: string;
   name: string;
-};
+}
 
-// Define API response type for the movie data
-export interface MovieAPIResponse {
+export interface ApiResponse<T> {
   page: number;
-  results: MovieType[] | TvType[];
+  results: T[];
   total_pages: number;
   total_results: number;
 }
 
-export interface TVAPIResponse {
-  page: number;
-  results: TvType[];
-  total_pages: number;
-  total_results: number;
-}
-export type CollectionType = "movie" | "tv";
-export type CategoryType = "popular" | "top_rated";
+export type MediaType = "movie" | "tv";
+export type CategoryType = "popular" | "top_rated" | "search";

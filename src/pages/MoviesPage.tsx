@@ -1,38 +1,22 @@
-import React, { Suspense, useDeferredValue } from "react";
+import React, { Suspense } from "react";
 import Button from "../components/Button";
 import Grid from "../components/grid";
-import { MovieAPIResponse } from "../types"; // Ensure this is defined in your types
-import MovieCard from "../components/movie/MovieCard";
+import MovieCard, { CardSkeleton } from "../components/movie/MovieCard";
 import Search from "../components/Search";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteMovies } from "../hooks/useInfiniteMovies";
 import { useSearchParams } from "react-router-dom";
 
 const MoviesPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const keyword = searchParams.get("keyword") || "";
-
-  const { data, error, fetchNextPage, hasNextPage } = useInfiniteQuery<
-    MovieAPIResponse,
-    Error
-  >({
-    queryKey: ["movies", keyword], // Adding keyword to queryKey for cache key and refetching
-    queryFn: async ({ pageParam = 1 }) => {
-      // Constructing the URL based on keyword
-      const url = keyword
-        ? `https://api.themoviedb.org/3/search/movie?page=${pageParam}&api_key=4f85134e0e3de33d9af45eb9596b5735&query=${keyword}`
-        : `https://api.themoviedb.org/3/movie/popular?page=${pageParam}&api_key=4f85134e0e3de33d9af45eb9596b5735`;
-
-      const response = await fetch(url);
-      return await response.json();
-    },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      console.log("page", lastPage);
-      return lastPage.page + 1;
-    },
-  });
-
-  const deferredData = useDeferredValue(data);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteMovies({
+      tags: [searchParams.get("keyword") ?? ""],
+      mediaType: "movie",
+      categoryType: searchParams.has("keyword") ? "search" : "popular",
+      ...(searchParams.has("keyword") && {
+        query: searchParams.get("keyword"),
+      }),
+    });
 
   return (
     <div>
@@ -44,40 +28,72 @@ const MoviesPage: React.FC = () => {
       <div className="bg-black lg:p-16 md:px-8 py-8 px-4">
         <div className="max-w-screen-2xl mx-auto">
           <div className="">
-            <Search />
+            <Search
+              searchParams={searchParams}
+              setSearchParams={setSearchParams}
+            />
           </div>
           <div className="mt-16 max-w-screen-2xl">
-            <Grid className="grid-cols-2 sm:grid-cols-4 lg:grid-cols-6">
-              <Suspense fallback={<h2>Loading...</h2>}>
-                {deferredData?.pages.map((item) =>
-                  item.results
-                    ? item.results.map((movie) => {
-                        if (!movie.backdrop_path) {
-                          return null;
-                        }
-                        return (
-                          <Grid.Item
-                            key={movie.id}
-                            className="animate-fadeIn px-2 mb-8"
-                          >
-                            <MovieCard movie={movie} />
-                          </Grid.Item>
-                        );
-                      })
-                    : null
-                )}
+            <Grid
+              className={`grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 ${
+                isLoading ? "gap-4" : ""
+              }`}
+            >
+              <Suspense>
+                {isLoading
+                  ? new Array(12)
+                      .fill(6)
+                      .map((item, index) => <CardSkeleton key={item + index} />)
+                  : data?.pages.map((item) =>
+                      item.results
+                        ? item.results.map((movie) => {
+                            if (!movie.backdrop_path) {
+                              return null;
+                            }
+                            return (
+                              <Grid.Item
+                                key={movie.id}
+                                className="animate-fadeIn px-2 mb-8"
+                              >
+                                <MovieCard data={movie} />
+                              </Grid.Item>
+                            );
+                          })
+                        : null
+                    )}
+                {isFetchingNextPage &&
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <CardSkeleton key={`fetching-${index}`} />
+                  ))}
               </Suspense>
             </Grid>
             <div className="flex justify-center mt-8">
               <Button
-                className={hasNextPage ? "" : "hidden"}
+                className={hasNextPage ? "flex items-center gap-1" : "hidden"}
                 variant="secondary"
                 tagName="button"
+                disable={isFetchingNextPage}
                 size="sm"
                 onClick={() => {
                   fetchNextPage();
                 }}
               >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`mr-2 h-4 w-4 text-white animate-spin ${
+                    isFetchingNextPage ? "block" : "hidden"
+                  }`}
+                >
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
                 Load More
               </Button>
             </div>

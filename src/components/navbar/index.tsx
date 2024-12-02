@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 const Navbar: React.FC = () => {
   const location = useLocation();
   const { pathname } = location;
-  console.log("pathname", pathname);
   return (
     <nav className="max-w-screen-2xl w-full flex justify-between items-center">
       <div className="md:block hidden">

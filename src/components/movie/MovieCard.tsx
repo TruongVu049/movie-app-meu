@@ -1,16 +1,16 @@
-import { MovieType, TvType } from "../../types";
+import { Movie, TV } from "../../types";
 import { Link } from "react-router-dom";
 import { getImageUrl } from "../../Helper/imageHelper";
 
 import Button from "../Button";
 
-export default function MovieCard({ movie }: { movie: MovieType | TvType }) {
-  const isMovie = (movie: MovieType | TvType): movie is MovieType =>
-    (movie as MovieType).title !== undefined;
+export default function MediaCard({ data }: { data: Movie | TV }) {
+  const isMovie = (movie: Movie | TV): movie is Movie =>
+    (movie as Movie).title !== undefined;
 
   return (
     <Link
-      to={`/movie/${movie.id}`}
+      to={`/movie/${data.id}`}
       className={"hover:cursor-pointer group/card z-10"}
     >
       <div
@@ -20,7 +20,7 @@ export default function MovieCard({ movie }: { movie: MovieType | TvType }) {
               "
         style={{
           backgroundImage: `url("${getImageUrl(
-            movie.backdrop_path ?? "",
+            data.backdrop_path ?? "",
             "original"
           )}")`,
         }}
@@ -48,8 +48,17 @@ export default function MovieCard({ movie }: { movie: MovieType | TvType }) {
         </Button>
       </div>
       <h4 className="font-medium group-hover/card:text-color-primary text-white text-sm md:text-lg mt-4 transition duration-300 ease-in-out">
-        {isMovie(movie) ? movie.title : movie.name}
+        {isMovie(data) ? data.title : data.name}
       </h4>
     </Link>
+  );
+}
+
+export function CardSkeleton() {
+  return (
+    <div className={"animate-pulse"}>
+      <div className="h-72 2xl:h-80 bg-gray-600 rounded-3xl"></div>
+      <div className="font-medium h-4 mt-2 bg-gray-600 rounded-full"></div>
+    </div>
   );
 }

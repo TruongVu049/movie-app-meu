@@ -1,37 +1,21 @@
-import React, { Suspense, useDeferredValue } from "react";
+import React, { Suspense } from "react";
 import Button from "../components/Button";
 import Grid from "../components/grid";
-import { MovieAPIResponse } from "../types"; // Ensure this is defined in your types
-import MovieCard from "../components/movie/MovieCard";
+import MovieCard, { CardSkeleton } from "../components/movie/MovieCard";
 import Search from "../components/Search";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteMovies } from "../hooks/useInfiniteMovies";
 import { useSearchParams } from "react-router-dom";
-import fetch from "../services/fetch";
 
-const TVSeriesPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const keyword = searchParams.get("keyword") || "";
-
-  const { data, error, fetchNextPage, hasNextPage } = useInfiniteQuery<
-    MovieAPIResponse,
-    Error
-  >({
-    queryKey: ["movies", keyword],
-    queryFn: async ({ pageParam = 1 }) => {
-      return fetch(
-        keyword
-          ? `https://api.themoviedb.org/3/search/tv?page=${pageParam}&api_key=4f85134e0e3de33d9af45eb9596b5735&query=${keyword}`
-          : `https://api.themoviedb.org/3/tv/popular?page=${pageParam}&api_key=4f85134e0e3de33d9af45eb9596b5735`
-      );
-    },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      console.log("page", lastPage);
-      return lastPage.page + 1;
-    },
+const TvSeriesPage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteMovies({
+    tags: [searchParams.get("keyword") ?? ""],
+    mediaType: "tv",
+    categoryType: searchParams.has("keyword") ? "search" : "popular",
+    ...(searchParams.has("keyword") && {
+      query: searchParams.get("keyword"),
+    }),
   });
-
-  const deferredData = useDeferredValue(data);
 
   return (
     <div>
@@ -43,28 +27,39 @@ const TVSeriesPage: React.FC = () => {
       <div className="bg-black lg:p-16 md:px-8 py-8 px-4">
         <div className="max-w-screen-2xl mx-auto">
           <div className="">
-            <Search />
+            <Search
+              searchParams={searchParams}
+              setSearchParams={setSearchParams}
+            />
           </div>
           <div className="mt-16 max-w-screen-2xl">
-            <Grid className="grid-cols-2 sm:grid-cols-4 lg:grid-cols-6">
-              <Suspense fallback={<h2>Loading...</h2>}>
-                {deferredData?.pages.map((item) =>
-                  item.results
-                    ? item.results.map((movie) => {
-                        if (!movie.backdrop_path) {
-                          return null;
-                        }
-                        return (
-                          <Grid.Item
-                            key={movie.id}
-                            className="animate-fadeIn px-2 mb-8"
-                          >
-                            <MovieCard movie={movie} />
-                          </Grid.Item>
-                        );
-                      })
-                    : null
-                )}
+            <Grid
+              className={`grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 ${
+                isLoading ? "gap-4" : ""
+              }`}
+            >
+              <Suspense>
+                {isLoading
+                  ? new Array(12)
+                      .fill(6)
+                      .map((item, index) => <CardSkeleton key={item + index} />)
+                  : data?.pages.map((item) =>
+                      item.results
+                        ? item.results.map((movie) => {
+                            if (!movie.backdrop_path) {
+                              return null;
+                            }
+                            return (
+                              <Grid.Item
+                                key={movie.id}
+                                className="animate-fadeIn px-2 mb-8"
+                              >
+                                <MovieCard data={movie} />
+                              </Grid.Item>
+                            );
+                          })
+                        : null
+                    )}
               </Suspense>
             </Grid>
             <div className="flex justify-center mt-8">
@@ -87,4 +82,4 @@ const TVSeriesPage: React.FC = () => {
   );
 };
 
-export default TVSeriesPage;
+export default TvSeriesPage;
