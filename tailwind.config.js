@@ -35,6 +35,7 @@ export default {
         fadeDownDelay1: "fadeDown 0.7s ease-in-out forwards .4s",
         fadeDownDelay2: "fadeDown 0.5s ease-in-out forwards .6s",
         scaleUp: "scaleUp 0.8s ease-in-out ",
+        scaleUp_md: "scaleUp 0.2s ease-in-out ",
       },
       fontFamily: {
         sans: ["'Space Grotesk'", "sans-serif"], // Thêm font vào đây
