@@ -1,13 +1,13 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 
-import "swiper/css";
-import "swiper/css/pagination";
 import Button from "./Button";
 import { Movie } from "../types";
 import { getImageUrl } from "../Helper/imageHelper";
 import { useRef, useState } from "react";
 import TrailerModal from "./Modal";
+
+import "swiper/swiper-bundle.css";
 
 export default function Banner({ movieList }: { movieList: Movie[] }) {
   const [trailer, setTrailer] = useState({

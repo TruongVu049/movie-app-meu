@@ -1,10 +1,10 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 
-import "swiper/css";
-import "swiper/css/pagination";
 import MovieCard from "./MovieCard";
 import { Movie, TV } from "../../types";
+
+import "swiper/swiper-bundle.css";
 
 export default function MovieSwiper({ data }: { data: Movie[] | TV[] }) {
   return (
