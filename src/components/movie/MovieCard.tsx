@@ -10,7 +10,7 @@ export default function MediaCard({ data }: { data: Movie | TV }) {
 
   return (
     <Link
-      to={`/movie/${data.id}`}
+      to={`/${isMovie(data) ? "movie" : "tv"}/${data.id}`}
       className={"hover:cursor-pointer group/card z-10"}
     >
       <div
@@ -47,7 +47,7 @@ export default function MediaCard({ data }: { data: Movie | TV }) {
           </svg>
         </Button>
       </div>
-      <h4 className="font-medium group-hover/card:text-color-primary text-white text-sm md:text-lg mt-4 transition duration-300 ease-in-out">
+      <h4 className="font-medium overflow-hidden group-hover/card:text-color-primary text-white text-sm md:text-lg mt-4 transition duration-300 ease-in-out">
         {isMovie(data) ? data.title : data.name}
       </h4>
     </Link>

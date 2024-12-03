@@ -8,22 +8,30 @@ import { TAGS } from "../constants";
 import { CardSkeleton } from "../components/movie/MovieCard";
 
 const HomePage: React.FC = () => {
-  const trendinhMovies = useMovies<Movie>(
-    [TAGS.movie, TAGS.popular],
-    "movie",
-    "popular"
-  );
-  const topRatedMovies = useMovies<Movie>(
-    [TAGS.movie, TAGS.top_rated],
-    "movie",
-    "top_rated"
-  );
-  const trendinhTV = useMovies<TV>([TAGS.tv, TAGS.popular], "tv", "popular");
-  const topRatedTV = useMovies<TV>(
-    [TAGS.tv, TAGS.top_rated],
-    "tv",
-    "top_rated"
-  );
+  const trendinhMovies = useMovies<Movie>({
+    tags: [TAGS.movie, TAGS.popular],
+    mediaType: "movie",
+    categoryType: "popular",
+    staleTime: 10000,
+  });
+  const topRatedMovies = useMovies<Movie>({
+    tags: [TAGS.movie, TAGS.top_rated],
+    mediaType: "movie",
+    categoryType: "top_rated",
+    staleTime: 10000,
+  });
+  const trendinhTV = useMovies<TV>({
+    tags: [TAGS.tv, TAGS.popular],
+    mediaType: "tv",
+    categoryType: "popular",
+    staleTime: 10000,
+  });
+  const topRatedTV = useMovies<TV>({
+    tags: [TAGS.tv, TAGS.top_rated],
+    mediaType: "tv",
+    categoryType: "top_rated",
+    staleTime: 10000,
+  });
 
   return (
     <>
@@ -36,7 +44,7 @@ const HomePage: React.FC = () => {
             <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black to-transparent"></div>
           </div>
         ) : (
-          <Banner movieList={trendinhMovies.data?.results.slice(1, 4) ?? []} />
+          <Banner movieList={trendinhMovies.data?.results.slice(1, 5) ?? []} />
         )}
       </Suspense>
 

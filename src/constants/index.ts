@@ -1,3 +1,5 @@
+import { MediaType } from "../types";
+
 export const IMAGE_SIZES = {
   small: "w500",
   original: "original",
@@ -29,18 +31,39 @@ export const Endpoints = {
     `${BASE_URL}/movie/popular?api_key=${API_KEY}${
       page ? "&page=" + page : ""
     }`,
-  MOVIE_TOP_RATED: `${BASE_URL}/movie/top_rated?api_key=${API_KEY}`,
+
+  MOVIE_TOP_RATED: (page?: number) =>
+    `${BASE_URL}/movie/top_rated?api_key=${API_KEY}${
+      page ? "&page=" + page : ""
+    }`,
+
   TV_POPULAR: (page?: number) =>
     `${BASE_URL}/tv/popular?api_key=${API_KEY}${page ? "&page=" + page : ""}`,
-  TV_TOP_RATED: `${BASE_URL}/tv/top_rated?api_key=${API_KEY}`,
+
+  TV_TOP_RATED: (page?: number) =>
+    `${BASE_URL}/tv/top_rated?api_key=${API_KEY}${page ? "&page=" + page : ""}`,
+
   MOVIE_SEARCH: (query: string, page: number = 1) =>
     `${BASE_URL}/search/movie?page=${page}&api_key=${API_KEY}&query=${encodeURIComponent(
       query
     )}`,
+
   TV_SEARCH: (query: string, page: number = 1) =>
     `${BASE_URL}/search/tv?page=${page}&api_key=${API_KEY}&query=${encodeURIComponent(
       query
     )}`,
+
+  VIDEOS: (mediaType: MediaType, id: number) =>
+    `${BASE_URL}/${mediaType}/${id}/videos?api_key=${API_KEY}`,
+
+  DETAIL: (mediaType: MediaType, id: number) =>
+    `${BASE_URL}/${mediaType}/${id}?api_key=${API_KEY}`,
+
+  SIMILAR: (mediaType: MediaType, id: number) =>
+    `${BASE_URL}/${mediaType}/${id}/similar?api_key=${API_KEY}`,
+
+  CREDIT: (mediaType: MediaType, id: number) =>
+    `${BASE_URL}/${mediaType}/${id}/credits?api_key=${API_KEY}`,
 };
 
 export const TAGS = {
@@ -49,4 +72,8 @@ export const TAGS = {
   popular: "popular",
   top_rated: "top_rated",
   search: "search",
+  similar: "similar",
+  credit: "credit",
+  video: "video",
+  detail: "detail",
 };

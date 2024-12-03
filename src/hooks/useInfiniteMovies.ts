@@ -1,6 +1,8 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchData } from "../services";
 import { ApiResponse, CategoryType, MediaType, Movie, TV } from "../types";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 export const useInfiniteMovies = <T extends Movie | TV>({
   tags,
   mediaType,
@@ -12,15 +14,22 @@ export const useInfiniteMovies = <T extends Movie | TV>({
   categoryType: CategoryType;
   query?: string | null;
 }) => {
+  const location = useLocation();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.resetQueries({ queryKey: [tags, query], exact: true });
+  }, [location.pathname, queryClient]);
   return useInfiniteQuery<ApiResponse<T>, Error>({
     queryKey: [tags, query],
-    queryFn: ({ pageParam = 1 }) =>
-      fetchData({
+    queryFn: ({ pageParam }) => {
+      return fetchData({
         mediaType: mediaType,
         categoryType: categoryType,
         page: pageParam as number,
         ...(query && { query: query }),
-      }),
+      });
+    },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       return lastPage.page + 1;

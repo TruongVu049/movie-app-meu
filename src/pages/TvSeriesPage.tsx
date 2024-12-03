@@ -8,14 +8,21 @@ import { useSearchParams } from "react-router-dom";
 
 const TvSeriesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteMovies({
-    tags: [searchParams.get("keyword") ?? ""],
-    mediaType: "tv",
-    categoryType: searchParams.has("keyword") ? "search" : "popular",
-    ...(searchParams.has("keyword") && {
-      query: searchParams.get("keyword"),
-    }),
-  });
+  const { data, isLoading, fetchNextPage, isFetchingNextPage } =
+    useInfiniteMovies({
+      tags: [searchParams.get("keyword") ?? ""],
+      mediaType: "tv",
+      categoryType: searchParams.has("keyword")
+        ? "search"
+        : searchParams.has("type")
+        ? searchParams.get("type") == "popular"
+          ? "popular"
+          : "top_rated"
+        : "popular",
+      ...(searchParams.has("keyword") && {
+        query: searchParams.get("keyword"),
+      }),
+    });
 
   return (
     <div>
@@ -35,7 +42,7 @@ const TvSeriesPage: React.FC = () => {
           <div className="mt-16 max-w-screen-2xl">
             <Grid
               className={`grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 ${
-                isLoading ? "gap-4" : ""
+                isLoading || isFetchingNextPage ? "gap-1" : ""
               }`}
             >
               <Suspense>
@@ -60,18 +67,43 @@ const TvSeriesPage: React.FC = () => {
                           })
                         : null
                     )}
+                {isFetchingNextPage &&
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <CardSkeleton key={`fetching-${index}`} />
+                  ))}
               </Suspense>
             </Grid>
             <div className="flex justify-center mt-8">
               <Button
-                className={hasNextPage ? "" : "hidden"}
+                className={
+                  data?.pages[0].total_pages !== data?.pages.length
+                    ? "flex items-center gap-1"
+                    : "hidden"
+                }
                 variant="secondary"
                 tagName="button"
+                disable={isFetchingNextPage}
                 size="sm"
                 onClick={() => {
                   fetchNextPage();
                 }}
               >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`mr-2 h-4 w-4 text-white animate-spin ${
+                    isFetchingNextPage ? "block" : "hidden"
+                  }`}
+                >
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
                 Load More
               </Button>
             </div>

@@ -5,14 +5,20 @@ import MovieCard, { CardSkeleton } from "../components/movie/MovieCard";
 import Search from "../components/Search";
 import { useInfiniteMovies } from "../hooks/useInfiniteMovies";
 import { useSearchParams } from "react-router-dom";
-
+import { TAGS } from "../constants";
 const MoviesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  const { data, isLoading, fetchNextPage, isFetchingNextPage } =
     useInfiniteMovies({
-      tags: [searchParams.get("keyword") ?? ""],
+      tags: [TAGS.movie, searchParams.get("keyword") ?? ""],
       mediaType: "movie",
-      categoryType: searchParams.has("keyword") ? "search" : "popular",
+      categoryType: searchParams.has("keyword")
+        ? "search"
+        : searchParams.has("type")
+        ? searchParams.get("type") === "popular"
+          ? "popular"
+          : "top_rated"
+        : "popular",
       ...(searchParams.has("keyword") && {
         query: searchParams.get("keyword"),
       }),
@@ -36,7 +42,7 @@ const MoviesPage: React.FC = () => {
           <div className="mt-16 max-w-screen-2xl">
             <Grid
               className={`grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 ${
-                isLoading ? "gap-4" : ""
+                isLoading || isFetchingNextPage ? "gap-1" : ""
               }`}
             >
               <Suspense>
@@ -69,7 +75,11 @@ const MoviesPage: React.FC = () => {
             </Grid>
             <div className="flex justify-center mt-8">
               <Button
-                className={hasNextPage ? "flex items-center gap-1" : "hidden"}
+                className={
+                  data?.pages[0].total_pages !== data?.pages.length
+                    ? "flex items-center gap-1"
+                    : "hidden"
+                }
                 variant="secondary"
                 tagName="button"
                 disable={isFetchingNextPage}
