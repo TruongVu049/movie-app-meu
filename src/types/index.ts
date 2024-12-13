@@ -25,13 +25,6 @@ export interface TV extends Media {
   name: string;
 }
 
-export interface ApiResponse<T> {
-  page: number;
-  results: T[];
-  total_pages: number;
-  total_results: number;
-}
-
 export interface Video {
   iso_639_1: string;
   iso_3166_1: string;
@@ -188,7 +181,15 @@ export interface Credit {
   cast: CastMember[];
 }
 
-export type MediaType = "movie" | "tv";
+export interface ApiResponse<T> {
+  page: number;
+  results: T[];
+  total_pages: number;
+  total_results: number;
+}
+
+export type MediaType = "movie" | "tv" | "search";
+
 export type CategoryType =
   | "popular"
   | "top_rated"
@@ -196,4 +197,6 @@ export type CategoryType =
   | "video"
   | "detail"
   | "similar"
-  | "credit";
+  | "credit"
+  | "movie"
+  | "tv";

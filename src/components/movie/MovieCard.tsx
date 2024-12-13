@@ -1,13 +1,10 @@
-import { Movie, TV } from "../../types";
 import { Link } from "react-router-dom";
-import { getImageUrl } from "../../Helper/imageHelper";
-
+import { isMovie } from "@/helper";
+import config from "@/config";
 import Button from "../Button";
+import { Movie, TV } from "@/types";
 
 export default function MediaCard({ data }: { data: Movie | TV }) {
-  const isMovie = (movie: Movie | TV): movie is Movie =>
-    (movie as Movie).title !== undefined;
-
   return (
     <Link
       to={`/${isMovie(data) ? "movie" : "tv"}/${data.id}`}
@@ -19,10 +16,7 @@ export default function MediaCard({ data }: { data: Movie | TV }) {
               after:left-0 after:rounded-3xl hover:after:bg-black/50 after:transition after:ease-in-out after:duration-300        
               "
         style={{
-          backgroundImage: `url("${getImageUrl(
-            data.backdrop_path ?? "",
-            "original"
-          )}")`,
+          backgroundImage: `url("${config.backDropPath + data.backdrop_path}")`,
         }}
       >
         <Button
