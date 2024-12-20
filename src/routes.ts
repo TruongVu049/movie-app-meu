@@ -1,6 +1,6 @@
 // src/routes.ts
 import { createBrowserRouter } from "react-router-dom";
-import MainLayout from "./layouts/MainLayout";
+import MainLayout from "./layouts/MainLayout/index.tsx";
 
 export const router = createBrowserRouter([
   {
