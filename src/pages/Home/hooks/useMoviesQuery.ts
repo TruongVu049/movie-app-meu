@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchMedia } from "@/services/movies/movieservices";
+import { fetchMovies } from "@/services/movie";
 import { CategoryType, MediaType } from "@/types";
 
 export const useMoviesQuery = ({
@@ -16,12 +16,12 @@ export const useMoviesQuery = ({
   return useQuery({
     queryKey: [mediaType, categoryType],
     queryFn: () =>
-      fetchMedia({
+      fetchMovies({
         mediaType: mediaType,
         categoryType: categoryType,
         ...(page && { page: page }),
       }),
-    ...(staleTime && { staleTime }),
+    staleTime: staleTime ?? 10000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: true,
   });

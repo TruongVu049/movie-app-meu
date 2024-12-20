@@ -3,36 +3,34 @@ import { useMoviesQuery } from "./hooks/useMoviesQuery";
 import Banner from "./components/Banner";
 import MovieCategoryItem from "./components/MovieCategoryItem";
 import MoviesSection from "./components/MoviesSection";
+import ScrollToTop from "@/components/ScrollToTop/ScrollToTop";
 
 const HomePage: React.FC = () => {
   const { data: trendingMovieList, isSuccess: isSuccessTrendingMovie } =
     useMoviesQuery({
       mediaType: "movie",
       categoryType: "popular",
-      staleTime: 10000,
     });
 
   const { data: topRatedMovieList, isSuccess: isSuccessTopRatedMovie } =
     useMoviesQuery({
       mediaType: "movie",
       categoryType: "top_rated",
-      staleTime: 10000,
     });
   const { data: trendingTvList, isSuccess: isSuccessTrendingTv } =
     useMoviesQuery({
       mediaType: "tv",
       categoryType: "popular",
-      staleTime: 10000,
     });
   const { data: topRatedTvList, isSuccess: isSuccessTopRatedTv } =
     useMoviesQuery({
       mediaType: "tv",
       categoryType: "top_rated",
-      staleTime: 10000,
     });
 
   return (
     <>
+      <ScrollToTop />
       {!isSuccessTrendingMovie ? (
         <div className="relative h-80 md:h-[36rem] lg:h-[52rem]">
           <div className="animate-pulse">
