@@ -1,11 +1,6 @@
-export type ButtonProps = {
-  tagName?: "button" | "a";
-  type?: "button" | "submit" | "reset";
-  href?: string;
-  disable?: boolean;
-  size?: "lg" | "sm";
-  variant?: "primary" | "secondary";
-  className?: string;
-  children: React.ReactNode;
-  onClick?: () => void;
-};
+import { VariantProps } from "class-variance-authority";
+import React from "react";
+import { buttonVariants } from "./utils";
+
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants>;

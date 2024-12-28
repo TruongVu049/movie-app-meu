@@ -1,21 +1,21 @@
 import React, { Suspense } from "react";
 import { useParams } from "react-router-dom";
-import useCreditQuery from "./hooks/useCreditQuery";
-import useMovieQuery from "./hooks/useMovieQuery";
-import useSimilarQuery from "./hooks/useSimilarQuery";
-import { MediaType } from "@/types";
+import {
+  useCreditQuery,
+  useMovieQuery,
+  useSimilarQuery,
+  useVideosQuery,
+} from "@/hooks/movie";
+import { Credit, MediaType, MovieDetail, TVDetail } from "@/types";
 import Banner from "./components/Banner";
-import { useVideosQuery } from "@/hooks/movie/useVideoQuery";
-import { CardSkeleton } from "@/components/MovieCard";
-import ScrollToTop from "@/components/ScrollToTop/ScrollToTop";
+import SimilarList from "./components/SimilarList";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 const VideosSection = React.lazy(() => import("./components/VideosSection"));
-const SimilarList = React.lazy(() => import("./components/SimilarList"));
 
 const MoviePage: React.FC = () => {
   const params = useParams();
   const { mediaType, id } = params;
-
   const { data: movie, isSuccess: isSuccessMovie } = useMovieQuery({
     mediaType: mediaType as MediaType,
     id: Number(id),
@@ -31,19 +31,24 @@ const MoviePage: React.FC = () => {
     id: Number(id),
   });
 
-  const { data: movieList, isSuccess: isSuccessMovieList } = useSimilarQuery({
+  const {
+    data: movieList,
+    isSuccess: isSuccessMovieList,
+    error: errorMovieList,
+  } = useSimilarQuery({
     mediaType: mediaType as MediaType,
     id: Number(id),
   });
 
+  useScrollToTop();
+
   return (
     <div>
-      <ScrollToTop />
       <Banner
         isSuccessMovie={isSuccessMovie}
         isSuccessCredit={isSuccessCredit}
-        movie={movie}
-        credit={credit}
+        movie={movie as MovieDetail | TVDetail}
+        credit={credit as Credit}
       />
       <div className="bg-black py-2 lg:px-16 md:px-8 px-4">
         <Suspense
@@ -57,19 +62,11 @@ const MoviePage: React.FC = () => {
           <VideosSection videoList={isSuccessVideos ? videos.results : []} />
         </Suspense>
 
-        <Suspense
-          fallback={
-            <div className="grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-4">
-              {new Array(6).fill(6).map((item, index) => (
-                <CardSkeleton key={item + index} />
-              ))}
-            </div>
-          }
-        >
-          <SimilarList
-            movieList={isSuccessMovieList ? movieList.results : []}
-          />
-        </Suspense>
+        <SimilarList
+          movies={isSuccessMovieList ? (movieList as any).results : []}
+          isSuccess={isSuccessMovieList}
+          error={errorMovieList?.message}
+        />
       </div>
     </div>
   );

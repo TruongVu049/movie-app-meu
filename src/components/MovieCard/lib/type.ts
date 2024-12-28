@@ -1,3 +1,12 @@
-import { Movie, TV } from "@/types";
+import React from "react";
+import { LinkProps } from "react-router-dom";
 
-export type MovieCardProps = { data: Movie | TV };
+export type MovieCardProps = LinkProps & React.RefAttributes<HTMLAnchorElement>;
+
+export type MovieCardTitleProps = React.HtmlHTMLAttributes<HTMLDivElement> & {
+  title: string;
+};
+
+export type MovieCardImageProps = React.HtmlHTMLAttributes<HTMLDivElement> & {
+  url: string;
+};

@@ -4,5 +4,5 @@ export type BannerProps = {
   isSuccessMovie: boolean;
   isSuccessCredit: boolean;
   movie: MovieDetail | TVDetail;
-  credit: Credit;
+  credit: Credit | undefined;
 };

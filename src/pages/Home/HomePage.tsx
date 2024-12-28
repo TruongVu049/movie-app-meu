@@ -1,36 +1,49 @@
 import React from "react";
-import { useMoviesQuery } from "./hooks/useMoviesQuery";
+import { useMoviesQuery } from "@/hooks/movie";
 import Banner from "./components/Banner";
-import MovieCategoryItem from "./components/MovieCategoryItem";
+import MovieSwiperList from "@/components/MovieSwiperList";
 import MoviesSection from "./components/MoviesSection";
-import ScrollToTop from "@/components/ScrollToTop/ScrollToTop";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 const HomePage: React.FC = () => {
-  const { data: trendingMovieList, isSuccess: isSuccessTrendingMovie } =
-    useMoviesQuery({
-      mediaType: "movie",
-      categoryType: "popular",
-    });
+  const {
+    data: trendingMovieList,
+    isSuccess: isSuccessTrendingMovie,
+    error: errorTrendingMovie,
+  } = useMoviesQuery({
+    mediaType: "movie",
+    categoryType: "popular",
+  });
 
-  const { data: topRatedMovieList, isSuccess: isSuccessTopRatedMovie } =
-    useMoviesQuery({
-      mediaType: "movie",
-      categoryType: "top_rated",
-    });
-  const { data: trendingTvList, isSuccess: isSuccessTrendingTv } =
-    useMoviesQuery({
-      mediaType: "tv",
-      categoryType: "popular",
-    });
-  const { data: topRatedTvList, isSuccess: isSuccessTopRatedTv } =
-    useMoviesQuery({
-      mediaType: "tv",
-      categoryType: "top_rated",
-    });
+  const {
+    data: topRatedMovieList,
+    isSuccess: isSuccessTopRatedMovie,
+    error: errorTopRatedMovie,
+  } = useMoviesQuery({
+    mediaType: "movie",
+    categoryType: "top_rated",
+  });
+  const {
+    data: trendingTvList,
+    isSuccess: isSuccessTrendingTv,
+    error: errorTrendingTv,
+  } = useMoviesQuery({
+    mediaType: "tv",
+    categoryType: "popular",
+  });
+  const {
+    data: topRatedTvList,
+    isSuccess: isSuccessTopRatedTv,
+    error: errorTopRatedTv,
+  } = useMoviesQuery({
+    mediaType: "tv",
+    categoryType: "top_rated",
+  });
+
+  useScrollToTop();
 
   return (
     <>
-      <ScrollToTop />
       {!isSuccessTrendingMovie ? (
         <div className="relative h-80 md:h-[36rem] lg:h-[52rem]">
           <div className="animate-pulse">
@@ -46,9 +59,10 @@ const HomePage: React.FC = () => {
           <div className="mb-8 md:mb-16">
             <MoviesSection title="Trending Movies" href="/movie?type=popular">
               <div className="mt-8">
-                <MovieCategoryItem
+                <MovieSwiperList
+                  movies={trendingMovieList?.results ?? []}
                   isSuccess={isSuccessTrendingMovie}
-                  movieList={trendingMovieList?.results ?? []}
+                  error={errorTrendingMovie?.message}
                 />
               </div>
             </MoviesSection>
@@ -59,9 +73,10 @@ const HomePage: React.FC = () => {
               href="/movie?type=top_rated"
             >
               <div className="mt-8">
-                <MovieCategoryItem
+                <MovieSwiperList
+                  movies={topRatedMovieList?.results ?? []}
                   isSuccess={isSuccessTopRatedMovie}
-                  movieList={topRatedMovieList?.results ?? []}
+                  error={errorTopRatedMovie?.message}
                 />
               </div>
             </MoviesSection>
@@ -69,9 +84,10 @@ const HomePage: React.FC = () => {
           <div className="mb-8 md:mb-16">
             <MoviesSection title="Trending TV" href="/tv?type=popular">
               <div className="mt-8">
-                <MovieCategoryItem
+                <MovieSwiperList
+                  movies={trendingTvList?.results ?? []}
                   isSuccess={isSuccessTrendingTv}
-                  movieList={trendingTvList?.results ?? []}
+                  error={errorTrendingTv?.message}
                 />
               </div>
             </MoviesSection>
@@ -79,9 +95,10 @@ const HomePage: React.FC = () => {
           <div className="">
             <MoviesSection title="Top Rated TV" href="/tv?type=top_rated">
               <div className="mt-8">
-                <MovieCategoryItem
+                <MovieSwiperList
+                  movies={topRatedTvList?.results ?? []}
                   isSuccess={isSuccessTopRatedTv}
-                  movieList={topRatedTvList?.results ?? []}
+                  error={errorTopRatedTv?.message}
                 />
               </div>
             </MoviesSection>

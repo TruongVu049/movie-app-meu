@@ -1,5 +1,4 @@
-import { useVideosQuery } from "@/hooks/movie/useVideoQuery";
-import { Video } from "@/types";
+import { useVideosQuery } from "@/hooks/movie";
 import YoutubeEmbed from "@/components/YoutubeEmbed";
 import { TrailerModalProps } from "./lib/types";
 
@@ -7,11 +6,7 @@ export default function TrailerModal({
   trailer,
   onChangeTrailer,
 }: TrailerModalProps) {
-  const {
-    data: videoList,
-    isLoading,
-    isSuccess,
-  } = useVideosQuery({
+  const { data: videoList, isSuccess } = useVideosQuery({
     mediaType: "movie",
     id: trailer.movieId,
   });
@@ -19,7 +14,7 @@ export default function TrailerModal({
   return (
     <div className={`fixed inset-0 bg-black/30 py-16 z-50 `}>
       <div className="relative p-8 mx-auto bg-black max-w-screen-lg rounded-md h-full animate-scaleUp_md">
-        {isLoading && !isSuccess ? (
+        {!isSuccess ? (
           <div className="animate-pulse bg-gray-900  p-8 mx-auto max-w-screen-lg rounded-md h-full "></div>
         ) : (
           <>
@@ -44,10 +39,7 @@ export default function TrailerModal({
               </svg>
             </button>
             <YoutubeEmbed
-              embedId={
-                (videoList as { id: number; results: Video[] }).results[0]
-                  .key ?? ""
-              }
+              embedId={videoList.results[0].key ?? ""}
               className="w-full h-full"
             />
           </>

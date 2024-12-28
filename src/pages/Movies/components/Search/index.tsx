@@ -26,11 +26,10 @@ export default function Search({ searchParams, setSearchParams }: SearchProps) {
       />
 
       <Button
-        tagName="button"
-        variant="primary"
         type="submit"
+        variant="primary"
         size="sm"
-        className="text-white py-1 ml-2"
+        className="text-white py-1 ml-2 "
       >
         Search
       </Button>

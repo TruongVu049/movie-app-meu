@@ -1,5 +1,3 @@
-import { Movie, TV } from "@/types";
+import { MovieList } from "@/types";
 
-export interface SimilarListProps {
-  movieList: Movie[] | TV[];
-}
+export type SimilarMovieProps = MovieList;

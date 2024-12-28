@@ -1,6 +1,7 @@
 // src/routes.ts
 import { createBrowserRouter } from "react-router-dom";
-import MainLayout from "./layouts/MainLayout/index.tsx";
+import MainLayout from "./layouts/MainLayout";
+// import { RootErrorBoundary } from "./components/ErrorBoundary";
 
 export const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
           const { default: HomePage } = await import("@/pages/Home/HomePage");
           return { Component: HomePage };
         },
+        // errorElement: RootErrorBoundary,
       },
       {
         path: ":mediaType",

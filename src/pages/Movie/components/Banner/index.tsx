@@ -1,6 +1,6 @@
 import config from "@/config";
-import { isMovieDetail } from "@/helpers";
 import { BannerProps } from "./lib/types";
+import { MovieDetail } from "@/types";
 
 const Banner = ({
   isSuccessMovie,
@@ -54,9 +54,9 @@ const Banner = ({
             </div>
           ) : (
             <>
-              {isMovieDetail(movie) && (
+              {(movie as MovieDetail) && (
                 <h1 className="md:py-4 py-2 lg:text-7xl md:text-5xl text-3xl font-bold">
-                  {movie.original_title}
+                  {(movie as MovieDetail).original_title}
                 </h1>
               )}
 
@@ -88,7 +88,7 @@ const Banner = ({
               <>
                 <h4 className="text-[20px]">Casts</h4>
                 <div className="flex flex-wrap -mx-2">
-                  {credit.cast.slice(0, 5).map((item) =>
+                  {credit?.cast.slice(0, 5).map((item) =>
                     item.profile_path ? (
                       <div
                         key={item.id}

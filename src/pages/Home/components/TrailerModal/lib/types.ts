@@ -1,6 +1,6 @@
 export type TrailerModalProps = {
   trailer: {
-    status: boolean;
+    isOpen: boolean;
     movieId: number;
   };
   onChangeTrailer: () => void;

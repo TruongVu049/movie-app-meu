@@ -188,6 +188,17 @@ export interface ApiResponse<T> {
   total_results: number;
 }
 
+export type MovieList = {
+  movies: Movie[] | TV[];
+  isSuccess: boolean;
+  error: string | undefined;
+};
+
+export type FetchVideosResponse = {
+  id: number;
+  results: Video[];
+};
+
 export type MediaType = "movie" | "tv" | "search";
 
 export type CategoryType =
